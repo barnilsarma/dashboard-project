@@ -111,33 +111,35 @@ const Dashboard = () => {
         <h1 className={styles.title}>{data.name}</h1>
 
         {/* Task Input Form */}
-        <div className={styles.taskForm}>
-          <h2 className={styles.subTitle}>Assign a New Task</h2>
-          <div className={styles.formControls}>
-            <input
-              type="text"
-              placeholder="Assign person"
-              value={assigned}
-              onChange={(e) => setAssigned(e.target.value)}
-              className={styles.inputField}
-            />
-            <input
-              type="text"
-              placeholder="Task Title"
-              value={taskTitle}
-              onChange={(e) => setTaskTitle(e.target.value)}
-              className={styles.inputField}
-            />
-            <input
-              type="datetime-local"
-              value={dueDate}
-              onChange={(e) => setDueDate(e.target.value)}
-              className={styles.inputField}
-            />
-            <button onClick={addTask} className={styles.addButton}>Add Task</button>
-          </div>
-        </div>
-
+        {
+          admin===localStorage.getItem("email")?
+          <div className={styles.taskForm}>
+            <h2 className={styles.subTitle}>Assign a New Task</h2>
+            <div className={styles.formControls}>
+              <input
+                type="text"
+                placeholder="Assign person"
+                value={assigned}
+                onChange={(e) => setAssigned(e.target.value)}
+                className={styles.inputField}
+              />
+              <input
+                type="text"
+                placeholder="Task Title"
+                value={taskTitle}
+                onChange={(e) => setTaskTitle(e.target.value)}
+                className={styles.inputField}
+              />
+              <input
+                type="datetime-local"
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
+                className={styles.inputField}
+              />
+              <button onClick={addTask} className={styles.addButton}>Add Task</button>
+            </div>
+          </div>:null
+        }
         {/* Task List */}
         {data?.tasks?.length > 0 ? (
           <div className={styles.taskList}>
