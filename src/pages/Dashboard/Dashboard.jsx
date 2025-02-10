@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import styles from './Dashboard.module.scss';
 import axios from "axios";
 import { Toaster, toast } from 'sonner';
+import { auth, provider } from "../../firebase";
+import { signInWithPopup } from "firebase/auth";
 
 const Dashboard = () => {
   const [taskTitle, setTaskTitle] = useState("");
