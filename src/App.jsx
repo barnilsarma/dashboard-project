@@ -1,12 +1,13 @@
 import { BrowserRouter,Routes,Route } from "react-router-dom"
-import Dashboard from "./pages/Dashboard";
+import * as pages from "./pages/index";
 function App() {
 
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Dashboard/>} />
+          <Route path="/" element={<pages.Home/>} />
+          <Route path="/dashboard/:id" element={<pages.Dashboard/>} />
         </Routes>
       </BrowserRouter>
     </>

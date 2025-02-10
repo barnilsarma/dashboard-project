@@ -1,3 +1,12 @@
+.loginCont{
+  position: absolute;
+  top:0;
+  left:0;
+  width: 100vw;
+  height: 100vh;
+  filter:blur(4px);
+  transition:ease 1000ms;
+}
 .dashboardContainer {
     min-height: 100vh;
     display: flex;
@@ -33,6 +42,12 @@
   .formControls {
     display: flex;
     gap: 1rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    @media screen and (min-width:600px) {
+      flex-direction: row;
+    }
   }
   
   .inputField {
