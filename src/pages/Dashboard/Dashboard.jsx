@@ -41,20 +41,20 @@ const Dashboard = () => {
       alert("Please enter task title and due date.");
       return;
     }
-    console.log(taskTitle,dueDate,assigned,id);
+    console.log(taskTitle, dueDate, assigned, id);
     const formattedDueDate = new Date(dueDate).toISOString();
     const handlePost = async () => {
-      const res=await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/task`, {
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/task`, {
         name: taskTitle,
         due: formattedDueDate,
         status: "PENDING",
         assigned: assigned,
-        roomId:id
+        roomId: id
       });
       setTaskTitle("");
       setDueDate("");
     };
-    
+
 
     toast.promise(handlePost(), {
       loading: "Assigning Task!! Please wait...",
@@ -98,12 +98,63 @@ const Dashboard = () => {
     setLoggedIn(false);
   };
 
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const result = await signInWithPopup(auth, provider);
+
+      if (result.user && result.user.email) {
+        const userEmail = result.user.email.toLowerCase();
+        const name = result.user.displayName;
+
+        const createUser = async () => {
+          try {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/user`);
+            const users = response.data;
+
+            let userId = null;
+            users.msg.forEach((item) => {
+              if (item.email === userEmail) {
+                userId = item.id;
+                localStorage.setItem("userId", item.id);
+              }
+            });
+
+            if (!userId) {
+              const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/user`, {
+                name: name,
+                email: userEmail
+              });
+              userId = res.data.msg.id;
+              localStorage.setItem("userId", userId);
+            }
+
+            localStorage.setItem("email", userEmail);
+            setLoggedIn(true);
+          } catch (error) {
+            console.error("Error fetching/creating user:", error);
+            throw error;
+          }
+        };
+
+        await toast.promise(createUser(), {
+          loading: "Registering user....",
+          success: "User successfully registered!!",
+          error: "Error in registering user!!"
+        });
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+      toast.error("Login failed. Please try again.");
+    }
+  };
+
   return (
     <>
       {!localStorage.getItem("email") ? (
         <div className={styles.loginCont}>
           You need to login to view this page
-          <button onClick={handleLogout}>LOGOUT</button>
+          <button onClick={handleLogin}>LOGIN</button>
         </div>
       ) : null}
 
@@ -112,33 +163,33 @@ const Dashboard = () => {
 
         {/* Task Input Form */}
         {
-          admin===localStorage.getItem("email")?
-          <div className={styles.taskForm}>
-            <h2 className={styles.subTitle}>Assign a New Task</h2>
-            <div className={styles.formControls}>
-              <input
-                type="text"
-                placeholder="Assign person"
-                value={assigned}
-                onChange={(e) => setAssigned(e.target.value)}
-                className={styles.inputField}
-              />
-              <input
-                type="text"
-                placeholder="Task Title"
-                value={taskTitle}
-                onChange={(e) => setTaskTitle(e.target.value)}
-                className={styles.inputField}
-              />
-              <input
-                type="datetime-local"
-                value={dueDate}
-                onChange={(e) => setDueDate(e.target.value)}
-                className={styles.inputField}
-              />
-              <button onClick={addTask} className={styles.addButton}>Add Task</button>
-            </div>
-          </div>:null
+          admin === localStorage.getItem("email") ?
+            <div className={styles.taskForm}>
+              <h2 className={styles.subTitle}>Assign a New Task</h2>
+              <div className={styles.formControls}>
+                <input
+                  type="text"
+                  placeholder="Assign person"
+                  value={assigned}
+                  onChange={(e) => setAssigned(e.target.value)}
+                  className={styles.inputField}
+                />
+                <input
+                  type="text"
+                  placeholder="Task Title"
+                  value={taskTitle}
+                  onChange={(e) => setTaskTitle(e.target.value)}
+                  className={styles.inputField}
+                />
+                <input
+                  type="datetime-local"
+                  value={dueDate}
+                  onChange={(e) => setDueDate(e.target.value)}
+                  className={styles.inputField}
+                />
+                <button onClick={addTask} className={styles.addButton}>Add Task</button>
+              </div>
+            </div> : null
         }
         {/* Task List */}
         {data?.tasks?.length > 0 ? (
