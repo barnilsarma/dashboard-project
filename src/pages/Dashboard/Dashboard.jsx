@@ -202,6 +202,7 @@ const Dashboard = () => {
                 <div key={task.id} className={styles.taskCard}>
                   <div className={styles.taskContent}>
                     <h3 className={styles.taskTitle}>{task.name}</h3>
+                    <h3 className={styles.taskAssigned}>Assigned to:{task.assigned}</h3>
                     <p className={styles.taskDate}>Due Date: {task.due}</p>
                     <p className={task.status === "COMPLETED" ? styles.completed : styles.pending}>
                       Status: {task.status}
